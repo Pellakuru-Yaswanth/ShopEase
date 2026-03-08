@@ -1,0 +1,56 @@
+# ====================================================================
+# OS & IDE Specific
+# ====================================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.iml
+.settings/
+.classpath
+.project
+.factorypath
+bin/
+
+# ====================================================================
+# Backend: ShopEaseLauncher (Spring Boot / Maven)
+# ====================================================================
+# Ignore the build directory
+backend/ShopEaseLauncher/target/
+
+# Ignore compiled classes
+backend/ShopEaseLauncher/*.class
+
+# Ignore Maven Wrapper (optional, but keeps repo clean)
+backend/ShopEaseLauncher/mvnw
+backend/ShopEaseLauncher/mvnw.cmd
+backend/ShopEaseLauncher/.mvn/wrapper/maven-wrapper.jar
+
+# ====================================================================
+# Frontend: React.js
+# ====================================================================
+# Ignore dependencies
+frontend/node_modules/
+
+# Ignore production builds
+frontend/build/
+frontend/dist/
+
+# Ignore local environment secrets
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Frontend logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# ====================================================================
+# General / Global
+# ====================================================================
+*.log
+.env

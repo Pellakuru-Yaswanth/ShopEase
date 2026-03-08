@@ -1,0 +1,49 @@
+--> Contains Service Related data, which acts as intermediate between view and util
+
+-> Interfaces:
+--------------
+1. PaymentMethod - interface
+----------------------------
+	> checkout() - Used for payment operations and retuns Status Object in bean package
+---------------------------------------------------------------------------------------
+-> Classes:
+-----------
+1. ItemService
+2. CartService
+3. UserService
+4. PaymentService
+---------------------------------------------------------------------------------------
+1. ItemService
+---------------
+	> getAllItems() - returns List<Item>
+	> getItemByItemId(long itemId) - returns Item or null
+	> getItemsByItemName(String itemName) - returns List<Item> or null
+	> getItemQuantityByItemId(long itemId) - returns int
+	> createItem(String itemName, int quantity, double price, String picture) - returns Status Object in bean package
+	> generateItemId() - returns long
+	> updateItemName(long itemId, String itemNewName) - returns Status Object
+	> updateItemQuantity(long itemId, int quantity) - returns Status Object
+	> updateItemPrice(long itemId, double newPrice) - returns Status Object
+	> updateItemPicture(long itemId, String newPicture) - returns Status Object
+2. CartService
+---------------
+	> getCartByUserId(long userId) - returns Cart
+	> getTotalCartValue(long userId) - returns double with tax calculations
+	> createCart(long userId) - returns Status Object
+	> addItemToCart(long userId, long itemId) - returns Status Object
+	> removeItemFromCart(long userId, long itemId) - returns Status Object
+	> checkout(long userId) - returns Status Object
+3. UserService
+---------------
+	> getUserByUserIdAndPassword(long userId, String password) - returns User or null
+	> createUser(String password, String fullName, String contryCode, long phoneNumber, String email) - returns long(userId) or -1
+	> changePassword(long userId, String oldPassword, String newPassword) - returns Status Object
+4. PaymentService
+-----------------
+	> checkout(long userId, String paymentMethod) - returns Status Object
+	> generateInvoice(long userId, double amount) - returns Status Object
+	> Classes in same file
+	----------------------
+		> CreditCardPayment class implements PaymentMethod
+		> DebitCardPayment class implements PaymentMethod
+		> UPIPayment class implements PaymentMethod

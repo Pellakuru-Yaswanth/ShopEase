@@ -1,0 +1,60 @@
+--> Contains Structure related data
+
+-> Structures
+-------------
+1. Cart - class
+2. Item - class
+3. User - class
+4. Status - class
+-----------------------------------------------------------------------
+1. Cart
+-------
+-> Fields:
+	> userId - long - 8 digits
+	> items - Map<Item,Integer>
+	> totalCartValue - double
+-> Methods:
+	> getUserId() - returns long
+	> getCartItems() - returns Map<Item,Integer>
+	> getTotalCartValue() -	returns double
+	> addItemToCart(long itemId) - returns void
+	> removeItemFromCart(long itemId) - returns void
+------------------------------------------------------------------------
+2. Item:
+--------
+-> Fields:
+	> itemId - long - 6 digits
+	> itemName - String
+	> quantity - int
+	> price - double
+	> picture - String
+-> Methods:
+	> getItemId() - returns long
+	> getItemName() - returns String
+	> getItemQuantity() - returns int
+	> getItemPrice() - returns double
+	> getItemPicture() - returns String
+-------------------------------------------------------------------------
+3. User:
+--------
+-> Fields:
+	> userId - long
+	> password - String
+	> fullName - String
+	> countryCode - String
+	> phoneNumber - long
+	> email - String
+-> Methods:
+	> getUserId() - returns long
+	> getFullName() - returns String
+	> getPhoneNumber() - returns String (countryCode+phoneNumber)
+	> getEmail() - returns String
+--------------------------------------------------------------------------
+4. Status:
+----------
+-> Fields:
+	> status - boolean
+	> message - String
+-> Methods:
+	> getStatus() - returns boolean
+	> getMessage() - returns String
