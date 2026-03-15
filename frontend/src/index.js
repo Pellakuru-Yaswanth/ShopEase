@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom/client';
 import {BrowserRouter} from 'react-router-dom';
 import './index.css';
 import App from './App';
-import {store} from './redux/store';
+import {store} from './features/redux_store/store';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
-import NavbarManager from './navbars/NavbarManager';
+import NavbarManager from './features/navbars/NavbarManager';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

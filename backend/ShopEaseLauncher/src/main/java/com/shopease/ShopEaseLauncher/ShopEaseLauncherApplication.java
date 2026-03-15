@@ -6,7 +6,7 @@ import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EntityScan("com.shopease.bean")
-@EnableJpaRepositories("com.shopease.dao")
+@EnableJpaRepositories("com.shopease.repository")
 @SpringBootApplication(scanBasePackages = "com.shopease")
 public class ShopEaseLauncherApplication {
 

@@ -1,0 +1,57 @@
+#mainNavbar {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 12px 5%;
+    border-bottom: 1px solid #e0e0e0;
+    gap: 30px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Links Layout */
+.nav-links {
+    display: flex;
+    gap: 25px;
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+}
+
+.nav-links a {
+    position: relative;
+    padding-bottom: 5px; /* Space for the line */
+    color: #727070;
+}
+
+.nav-links a.active, .nav-links a:hover {
+    color: #4a90e2;
+}
+
+.nav-links a:hover{
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* The Smooth Underline */
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #4a90e2;
+    transition: width 0.3s ease-in-out;
+}
+
+.nav-links a.active::after {
+    width: 100%;
+}
+
+/* Search Bar Layout */
+.nav-search {
+    flex: 1; /* Makes search bar take up the rest of the space */
+    max-width: 700px;
+    margin-left: auto;
+}

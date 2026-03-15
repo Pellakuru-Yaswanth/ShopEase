@@ -1,65 +1,97 @@
 package com.shopease.service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Map;
+import com.shopease.bean.checkout.*;
+import com.shopease.bean.catalog.*;
+import com.shopease.bean.shopping.*;
+import com.shopease.bean.identity.*;
+import com.shopease.repository.checkout.*;
+import com.shopease.repository.catalog.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.shopease.bean.Cart;
-import com.shopease.bean.Item;
-import com.shopease.bean.OrderHistory;
-import com.shopease.bean.OrderedItem;
-import com.shopease.dao.OrderDao;
-import com.shopease.dao.OrderHistoryDao;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class OrderService {
-	
-	private OrderDao orderDao;
-	private OrderHistoryDao orderHistoryDao;
-	
-	@Autowired
-	public OrderService(OrderDao orderDao, OrderHistoryDao orderHistoryDao) {
-		this.orderDao = orderDao;
-		this.orderHistoryDao = orderHistoryDao;
-	}
-	
-	synchronized public long generateOrderId() {
-		long orderId;
-		try {
-			orderId = orderHistoryDao.generateOrderId()+1;
-		}catch(Exception e) {
-			orderId = 1000000001; //Default Order Id
-		}
-		return orderId;
-	}
-	
-	synchronized public double placeOrder(Cart cart) {
-		BigDecimal payableAmount = new BigDecimal(cart.getTotalCartValue());
-		BigDecimal taxPercentage = new BigDecimal(0.18); //(18% => 18/100=0.18)
-		payableAmount = payableAmount.add(payableAmount.multiply(taxPercentage)).setScale(2, RoundingMode.HALF_UP);
-		double paidAmount = payableAmount.doubleValue();
-		if(PaymentService.processPayment(paidAmount)) {
-			long orderId = generateOrderId();
-			orderHistoryDao.save(new OrderHistory(orderId, cart.getUserId(), paidAmount, paidAmount, true, "UPI Payment"));
-			for(Map.Entry<Item, Integer> cartItemEntry : cart.getCartItems().entrySet()) {
-				Item item = cartItemEntry.getKey();
-				int quantity = cartItemEntry.getValue();
-				orderDao.save(new OrderedItem(orderId, cart.getUserId(), item.getItemId(), quantity));
-			}
-		}
-		return paidAmount;
-	}
-	
-	
-}
 
-class PaymentService{
-	
-	public static boolean processPayment(double amount) {
-		return true; //hard-coded
-	}
-	
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private CartService cartService;
+
+    // 1. Place Order (The most important method)
+    @Transactional
+    public Order placeOrder(User user, Address shippingAddress, String paymentMethod) throws Exception {
+        Cart cart = cartService.getCartByUser(user);
+        
+        if (cart.getItems().isEmpty()) {
+            throw new Exception("Cannot place order with an empty cart!");
+        }
+
+        // Create new Order object
+        Order order = new Order();
+        order.setUser(user);
+        order.setShippingAddress(shippingAddress.toString());
+        order.setOrderDate(LocalDateTime.now());
+        order.setStatus("PENDING");
+        order.setTotalAmount(cartService.calculateTotal(cart));
+        
+        // Save order first to get the ID
+        Order savedOrder = orderRepository.save(order);
+
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        for (CartItem cartItem : cart.getItems()) {
+            Product product = cartItem.getProduct();
+            
+            // Check Stock Availability
+            if (product.getStockQuantity() < cartItem.getQuantity()) {
+                throw new Exception("Product " + product.getName() + " is out of stock!");
+            }
+
+            // Deduct Stock
+            product.setStockQuantity(product.getStockQuantity() - cartItem.getQuantity());
+            productRepository.save(product);
+
+            // Create OrderItem (Snapshot of product at purchase)
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(savedOrder);
+            orderItem.setProduct(product);
+            orderItem.setQuantity(cartItem.getQuantity());
+            orderItem.setPriceAtPurchase(product.getPrice());
+            
+            orderItems.add(orderItemRepository.save(orderItem));
+        }
+
+        // Clear the user's cart after successful order creation
+        cartService.clearCart(cart.getCartId());
+
+        return savedOrder;
+    }
+
+    // 2. Get Order History for a User
+    public List<Order> getUserOrders(Long userId) {
+        return orderRepository.findByUser_UserIdOrderByOrderDateDesc(userId);
+    }
+
+    // 3. Update Order Status (Admin feature)
+    public Order updateOrderStatus(Long orderId, String status) {
+        Order order = orderRepository.findById(orderId).orElse(null);
+        if (order != null) {
+            order.setStatus(status);
+            return orderRepository.save(order);
+        }
+        return null;
+    }
 }

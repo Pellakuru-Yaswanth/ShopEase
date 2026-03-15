@@ -1,0 +1,80 @@
+/* Item Cards Styling */
+.item-card {
+    min-width: 300px;
+    max-height: 400px;
+    flex: 0 0 auto;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #eee;
+    transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.item-card:hover {
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    transform: translateY(-10px);
+    cursor: pointer;
+}
+
+/* Item Inner Components */
+.badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: #4a90e2;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 5;
+}
+
+.item-image-placeholder {
+    height: 200px;
+    background: #f1f2f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+
+.item-details { 
+    padding: 20px; 
+}
+
+.category-tag {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #4a90e2;
+    font-weight: 700;
+}
+
+.item-details h3 {
+    font-size: 1.1rem;
+    margin: 5px 0 10px;
+}
+
+.price-row {
+    margin-bottom: 5px;
+}
+
+.current-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.old-price {
+    font-size: 0.9rem;
+    color: #b2bec3;
+    text-decoration: line-through;
+    margin-left: 10px;
+}
+
+@media (max-width: 992px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+    }
+}
